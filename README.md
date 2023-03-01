@@ -1,14 +1,14 @@
 # Scripting-AI-BoB
 This is a basic AI designed to learn python scripting
 
-The learning_with_nlp() function is the main function that utilizes OpenAI's API to generate Python scripts based on a given goal. The function starts by prompting the user to provide a goal for the script they want to generate.
+This is a Python script that uses OpenAI's API and Natural Language Processing (NLP) techniques to generate Python scripts based on a user-specified goal. The generated script is then evaluated by the user to determine if it has achieved the intended goal.
 
-Then, the function enters a loop that generates Python scripts and prompts the user for feedback on each script. The loop will continue until the user confirms that a generated script has achieved the goal.
+The script first imports the required libraries and sets up the OpenAI API key. It also creates a database (if it doesn't already exist) to store the generated scripts.
 
-In each iteration of the loop, the function uses OpenAI's Completion API to generate a Python script that achieves the provided goal. The API is called twice, once with the davinci engine and once with the text-davinci-002 engine. The davinci engine is a more powerful language model than text-davinci-002, but it also has higher costs. Therefore, using both engines can help balance the cost and performance of the script generation process.
+The generate_script() function takes a goal (specified by the user) and uses it as a prompt to generate a Python script using OpenAI's text generation model. The generated script is then cleaned up to remove any unwanted characters and stored in a file. The function returns the generated script.
 
-After generating a Python script, the function uses the SentimentIntensityAnalyzer from the Natural Language Toolkit (NLTK) library to analyze the sentiment of the script. The sentiment analysis can help identify any potential issues with the generated script that may need to be addressed.
+The analyze_sentiment() function takes a script and uses the SentimentIntensityAnalyzer from the Natural Language Toolkit (NLTK) to determine the sentiment (positive, negative or neutral) of the script.
 
-The generated script is then printed to the console, and the user is prompted to confirm whether or not the script has achieved the goal. If the user confirms that the goal has been achieved, the generated script is stored in a SQLite database. If not, the loop continues and generates a new script.
+The learning_with_nlp() function is the main function that drives the script. It prompts the user to enter a goal for the script and then generates a Python script based on that goal. The user is then asked to evaluate the script and provide feedback. If the generated script did not achieve the goal, a new script is generated based on the same goal. The process continues until the user is satisfied with the generated script.
 
-Finally, the function cleans up the generated script by removing any characters that are not alphanumeric or commonly used in Python code. The cleaned script is then written to a file with a unique name based on the current timestamp.
+Overall, this script demonstrates how NLP and machine learning can be used to automate the process of generating code, making it easier and more efficient for developers to write programs.
