@@ -1,8 +1,10 @@
 # Scripting-AI-BoB
 This is a basic AI designed to learn python scripting
 
-This program is a Python bot that continuously creates and writes new Python scripts in a specific format, named "sandbox-N.py" where N is a number that increments with each new script. The bot looks for other Python scripts in the current directory and its subdirectories to learn from and use in its own script building. It also creates a new subdirectory named "AI-Scripting-Tests" to store the generated scripts.
+This is a Python program that generates scripts using existing Python code and user-specified goals. It saves generated scripts to a directory called "AI-Scripting-Tests" in the current working directory, and asks the user for feedback on whether or not the generated script achieves the specified goal. If the user indicates that the script does not achieve the goal, the program generates another script with the same goal. If the user indicates that the script does achieve the goal, the program saves the script to the output directory and prompts the user for feedback on how the script can be improved.
 
-The bot takes up to two minutes per script to generate, and it checks if the script is complete before writing it to the file. It also ensures that it does not read or learn from its own scripts to avoid copying or repeating its own code.
+The program also uses a SQLite database to store generated scripts. The database is created if it doesn't exist, and a table named "scripts" is created to store the generated scripts. The table has two columns: "id" (an auto-incrementing primary key) and "script" (a text column that stores the generated script). After a script is generated and the user indicates that it achieves the goal, the generated script is added to the "scripts" table in the database.
 
-The program has a series of comments to help understand what each block of code does and any debugging or troubleshooting notes that may be relevant. Overall, this program is an example of a simple AI-powered script generator that can continue to learn and generate new scripts as long as it is running.
+The program limits the size of the generated scripts to a maximum of 1000 lines. It also limits the time taken to generate a script to 60 seconds.
+
+Overall, this program is an AI script generator that generates Python scripts based on existing code and user-specified goals, saves the generated scripts to a directory and a database, and prompts the user for feedback to improve the scripts.
