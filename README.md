@@ -1,10 +1,14 @@
 # Scripting-AI-BoB
 This is a basic AI designed to learn python scripting
 
-This is a Python program that generates scripts using existing Python code and user-specified goals. It saves generated scripts to a directory called "AI-Scripting-Tests" in the current working directory, and asks the user for feedback on whether or not the generated script achieves the specified goal. If the user indicates that the script does not achieve the goal, the program generates another script with the same goal. If the user indicates that the script does achieve the goal, the program saves the script to the output directory and prompts the user for feedback on how the script can be improved.
+The learning_with_nlp() function is the main function that utilizes OpenAI's API to generate Python scripts based on a given goal. The function starts by prompting the user to provide a goal for the script they want to generate.
 
-The program also uses a SQLite database to store generated scripts. The database is created if it doesn't exist, and a table named "scripts" is created to store the generated scripts. The table has two columns: "id" (an auto-incrementing primary key) and "script" (a text column that stores the generated script). After a script is generated and the user indicates that it achieves the goal, the generated script is added to the "scripts" table in the database.
+Then, the function enters a loop that generates Python scripts and prompts the user for feedback on each script. The loop will continue until the user confirms that a generated script has achieved the goal.
 
-The program limits the size of the generated scripts to a maximum of 1000 lines. It also limits the time taken to generate a script to 60 seconds.
+In each iteration of the loop, the function uses OpenAI's Completion API to generate a Python script that achieves the provided goal. The API is called twice, once with the davinci engine and once with the text-davinci-002 engine. The davinci engine is a more powerful language model than text-davinci-002, but it also has higher costs. Therefore, using both engines can help balance the cost and performance of the script generation process.
 
-Overall, this program is an AI script generator that generates Python scripts based on existing code and user-specified goals, saves the generated scripts to a directory and a database, and prompts the user for feedback to improve the scripts.
+After generating a Python script, the function uses the SentimentIntensityAnalyzer from the Natural Language Toolkit (NLTK) library to analyze the sentiment of the script. The sentiment analysis can help identify any potential issues with the generated script that may need to be addressed.
+
+The generated script is then printed to the console, and the user is prompted to confirm whether or not the script has achieved the goal. If the user confirms that the goal has been achieved, the generated script is stored in a SQLite database. If not, the loop continues and generates a new script.
+
+Finally, the function cleans up the generated script by removing any characters that are not alphanumeric or commonly used in Python code. The cleaned script is then written to a file with a unique name based on the current timestamp.
