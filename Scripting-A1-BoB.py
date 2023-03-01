@@ -7,9 +7,9 @@ import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 import openai
 import re
-# Replace with your OpenAI API key
-openai.api_key = "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"
 
+# Replace with your OpenAI API key
+openai.api_key = "YOUR_API_KEY"
 
 output_dir = os.getcwd()
 if not os.path.exists(output_dir):
@@ -26,11 +26,11 @@ db_cursor = db_conn.cursor()
 db_cursor.execute('''CREATE TABLE IF NOT EXISTS scripts (id INTEGER PRIMARY KEY AUTOINCREMENT, script TEXT)''')
 db_conn.commit()
 
-def generate_script():
-    scripts = [f for f in glob.glob(os.path.join(output_dir, '**/*.py'), recursive=True) 
-               if not (f.endswith('.py') and 
-                       (re.match(r'^test-\d+\.py$', os.path.basename(f)) or 
-                        re.match(r'^Test-\d+\.py$', os.path.basename(f))))]
+def generate_script(keywords):
+    scripts = [f for f in glob.glob(os.path.join(output_dir, '**/*.py'), recursive=True)
+              if not (f.endswith('.py') and
+                      (re.match(r'^test-\d+.py$', os.path.basename(f)) or
+                       re.match(r'^Test-\d+.py$', os.path.basename(f))))]
     script = ''
     for f in scripts:
         with open(f, 'r') as file:
@@ -38,14 +38,18 @@ def generate_script():
 
     generated_script = ''
     while True:
-        generated_script += random.choice(script.split('\n')) + '\n'
+        prompt = f"Generate a Python script that {keywords} using the OpenAI API."
+        completions = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=1024, n=1, stop=None, temperature=0.5)
+        generated_script = completions.choices[0].text
+        generated_script = re.sub('[^0-9a-zA-Z\n\.\,\(\)\[\]\{\}\_\+\-\=\*\&\^\%\$\#\@\!\~\`\?\>\<\:\;\'\"\|\\\]', '', generated_script)
+        generated_script = generated_script.strip()
         script_size = len(generated_script.split('\n'))
         if script_size > 1:
             script_file_name = os.path.join(output_dir, f'Test-{time.time()}.py')
             with open(script_file_name, 'w') as f:
                 f.write(generated_script)
-            generated_script = generated_script.strip().replace('\n', '\n    ')
-            print(f"Generated script: \n\n    {generated_script}")
+            generated_script_formatted = generated_script.strip().replace('\n', '\n    ')
+            print(f"Generated script: \n\n    {generated_script_formatted}")
             break
 
     return generated_script
@@ -63,17 +67,8 @@ def learning_with_nlp():
         feedback = ''
         while not feedback:
             input("Press Enter to generate a new script")
-            prompt = f"Generate a script that {goal}"
-            completions = openai.Completion.create(engine="text-davinci-002", prompt=prompt, max_tokens=1024, n=1, stop=None, temperature=0.5)
-            generated_script = completions.choices[0].text
-            generated_script = re.sub('[^0-9a-zA-Z\n\.\,\(\)\[\]\{\}\_\+\-\=\*\&\^\%\$\#\@\!\~\`\?\>\<\:\;\'\"\|\\\]', '', generated_script)
-            generated_script = generated_script.strip()
+            generated_script = generate_script(goal)
             sentiment_scores = analyze_sentiment(generated_script)
-            generated_script_formatted = generated_script.strip().replace('\n', '\n    ')
-            print(f"Generated script: \n\n    {generated_script_formatted}")
-            script_file_name = os.path.join(output_dir, f'Test-{time.time()}.py')
-            with open(script_file_name, 'w') as f:
-                f.write(generated_script)
             feedback = input("Did the generated script achieve the goal? (y/n): ")
             if feedback.lower() == 'n':
                 generated_script = ''
