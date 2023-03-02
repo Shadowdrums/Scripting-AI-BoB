@@ -9,7 +9,7 @@ import openai
 import re
 
 # Replace with your OpenAI API key
-openai.api_key = "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"
+openai.api_key = "YOUR_OPENAI_API_KEY"
 
 output_dir = os.getcwd()
 if not os.path.exists(output_dir):
