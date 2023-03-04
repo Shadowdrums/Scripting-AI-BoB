@@ -9,7 +9,8 @@ import openai
 import re
 
 # Replace with your OpenAI API key
-openai.api_key = "YOUR_OPENAI_API_KEY"
+OPENAI_KEY = os.environ.get("OPENAI_KEY")
+openai.api_key = input("Enter your OpenAI API Key and press enter/return:\n> ") if not OPENAI_KEY else OPENAI_KEY
 
 output_dir = os.getcwd()
 if not os.path.exists(output_dir):
